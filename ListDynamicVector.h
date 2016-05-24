@@ -5,10 +5,25 @@ class ListDynamicVector {
     public:
         class ListIterator {
             public:
-                ListIterator(ListDynamicVector& list) : list(list), current_index(0), last_index(-1) {}
+                ListIterator(ListDynamicVector* list, int index) :
+                    list(list), current_index(index), last_index(-1) {}
+
+                ~ListIterator() {}
+
+                ListIterator(const ListIterator& that) {
+                    list = that.list;
+                    current_index = that.current_index;
+                    last_index = that.last_index;
+                }
+
+                ListIterator& operator=(const ListIterator& that) {
+                    list = that.list;
+                    current_index = that.current_index;
+                    last_index = that.last_index;
+                }
 
                 bool has_next() {
-                    return current_index < list.dimension;
+                    return current_index < list->dimension;
                 }
 
                 bool has_previous() {
@@ -16,12 +31,12 @@ class ListDynamicVector {
                 }
 
                 T next() {
-                    if (current_index + 1 > list.dimension) {
+                    if (current_index + 1 > list->dimension) {
                         throw ListException("The iterator has no next element!");
                     }
 
                     last_index = current_index;
-                    return list[current_index++];
+                    return list->elements[current_index++];
                 }
 
                 T previous() {
@@ -30,7 +45,7 @@ class ListDynamicVector {
                     }
 
                     last_index = current_index - 1;
-                    return list[--current_index];
+                    return list->elements[--current_index];
                 }
 
                 int next_index() {
@@ -41,39 +56,57 @@ class ListDynamicVector {
                     return current_index - 1;
                 }
 
-                void set(T element) {
-                    if (last_index == -1) {
-                        throw ListException("Neither next or previous have been called, or remove or add have been called after the last call to next or previous!");
+                void add(T element) {
+                    if (list->dimension == list->capacity) {
+                        resize();
                     }
 
-                    list[last_index] = element;
+                    list->dimension++;
+                    for (int i = list->dimension; i > current_index; i--) {
+                        list->elements[i] = list->elements[i - 1];
+                    }
+
+                    list->elements[current_index] = element;
+                    last_index = -1;
                 }
 
-                void add(T element) {
-                    list.dimension++;
-                    for (int i = list.dimension; i > current_index; i--)
-                        list[i] = list[i - 1];
+                void set(T element) {
+                    if (last_index == -1) {
+                        throw ListException("Neither next or previous have been called!");
+                    }
 
-                    list[current_index] = element;
-                    last_index = -1;
+                    list->elements[last_index] = element;
                 }
 
                 void remove() {
                     if (last_index == -1) {
-                        throw ListException("Neither next or previous have been called, or remove or add have been called after the last call to next or previous!");
+                        throw ListException("Neither next or previous have been called!");
                     }
 
-                    list.dimension--;
-                    for (int i = last_index; i < list.dimension; i++)
-                        list[i] = list[i + 1];
+                    list->dimension--;
+                    for (int i = last_index; i < list->dimension; i++) {
+                        list->elements[i] = list->elements[i + 1];
+                    }
 
                     last_index = -1;
                 }
 
             private:
-                ListDynamicVector& list;
+                ListDynamicVector* list;
                 int current_index;
                 int last_index;
+
+                void resize() {
+                    list->capacity *= 2;
+
+                    T* aux = new T[list->capacity];
+                    for (int i = 0; i < list->dimension; i++) {
+                        aux[i] = list->elements[i];
+                    }
+
+                    delete[] list->elements;
+                    list->elements = aux;
+                }
         };
 
     public:
@@ -92,8 +125,9 @@ class ListDynamicVector {
             capacity = that.capacity;
             elements = new T[capacity];
 
-            for (int i = 0; i < dimension; i++)
+            for (int i = 0; i < dimension; i++) {
                 elements[i] = elements.that[i];
+            }
         }
 
         ListDynamicVector& operator=(const ListDynamicVector& that) {
@@ -106,8 +140,9 @@ class ListDynamicVector {
             delete[] elements;
             elements = new T[capacity];
 
-            for (int i = 0; i < dimension; i++)
+            for (int i = 0; i < dimension; i++) {
                 elements[i] = elements.that[i];
+            }
 
             return *this;
         }
@@ -120,15 +155,27 @@ class ListDynamicVector {
             return dimension;
         }
 
-        /* void clear(); */
-
-        ListIterator iterator() {
-            return ListIterator(*this);
+        void clear() {
+            dimension = 0;
         }
 
-        /* ListIterator iterator(int index); */
+        ListIterator begin() {
+            return ListIterator(this, 0);
+        }
+
+        ListIterator end() {
+            return ListIterator(this, dimension);
+        }
+
+        ListIterator iterator(int index) {
+            return ListException(this, index);
+        }
 
         T& operator[] (int index) {
+            if (index < 0 || index >= dimension) {
+                throw ListException("Index out of range!");
+            }
+
             return elements[index];
         }
 
@@ -136,5 +183,4 @@ class ListDynamicVector {
         int capacity;
         int dimension;
         T* elements;
-
 };
