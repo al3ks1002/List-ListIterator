@@ -5,8 +5,8 @@ class ListDynamicVector {
     public:
         ListDynamicVector();
         ~ListDynamicVector();
-        ListDynamicVector(const ListDynamicVector& that);
-        ListDynamicVector& operator=(const ListDynamicVector& that);
+        ListDynamicVector(const ListDynamicVector<T>& that);
+        ListDynamicVector& operator=(const ListDynamicVector<T>& that);
 
         bool empty() const;
         int size() const;
@@ -30,28 +30,28 @@ ListDynamicVector<T>::~ListDynamicVector() {
 }
 
 template<typename T>
-ListDynamicVector<T>::ListDynamicVector(const ListDynamicVector& that) {
-    vector = new DynamicVector<T>(that);
+ListDynamicVector<T>::ListDynamicVector(const ListDynamicVector<T>& that) {
+    vector = new DynamicVector<T>(*(that.vector));
 }
 
 template<typename T>
-ListDynamicVector<T>& ListDynamicVector<T>::operator=(const ListDynamicVector& that) {
+ListDynamicVector<T>& ListDynamicVector<T>::operator=(const ListDynamicVector<T>& that) {
     if (this == &that)
         return *this;
 
     delete vector;
-    vector = new DynamicVector<T>(that);
+    vector = new DynamicVector<T>(*(that.vector));
     return *this;
 }
 
 template<typename T>
 bool ListDynamicVector<T>::empty() const {
-    return vector.size() == 0;
+    return vector->size() == 0;
 }
 
 template<typename T>
 int ListDynamicVector<T>::size() const {
-    return vector.size();
+    return vector->size();
 }
 
 template<typename T>

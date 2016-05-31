@@ -1,5 +1,6 @@
 #include "DynamicVector.h"
-#include <iostream>
+
+#include <cstdio>
 
 template<typename T>
 class ListIteratorDV {
@@ -60,7 +61,7 @@ bool ListIteratorDV<T>::has_previous() const {
 
 template<typename T>
 T ListIteratorDV<T>::next() {
-    if (current_index + 1 > vector->size()) {
+    if (!has_next()) {
         throw CustomException("The iterator has no next element!");
     }
 
@@ -70,7 +71,7 @@ T ListIteratorDV<T>::next() {
 
 template<typename T>
 T ListIteratorDV<T>::previous() {
-    if (current_index - 1 < 0) {
+    if (!has_previous()) {
         throw CustomException("The iterator has no previous element!");
     }
 
@@ -91,6 +92,7 @@ int ListIteratorDV<T>::previous_index() const {
 template<typename T>
 void ListIteratorDV<T>::add(T element) {
     vector->add(element, current_index);
+    current_index++;
     last_index = -1;
 }
 
@@ -110,5 +112,9 @@ void ListIteratorDV<T>::remove() {
     }
 
     vector->remove(last_index);
+    if (last_index != current_index) {
+        current_index--;
+    }
+
     last_index = -1;
 }

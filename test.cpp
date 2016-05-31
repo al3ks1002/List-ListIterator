@@ -36,6 +36,13 @@ int main() {
         cout << c.previous() << endl;
     }
 
+    ListDynamicVector<int> w;
+    /* w = v; */
+    /* c = w.end(); */
+    /* while (c.has_previous()) { */
+    /*     cout << c.previous() << endl; */
+    /* } */
+
     auto it = v.begin();
     for (int i = 0; i < 10; i++) {
         it.add(i);
