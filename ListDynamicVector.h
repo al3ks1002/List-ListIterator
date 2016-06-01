@@ -1,3 +1,6 @@
+#ifndef LISTDYNAMICVECTOR_H_
+#define LISTDYNAMICVECTOR_H_
+
 #include "DynamicVector.h"
 
 template<typename T>
@@ -15,8 +18,6 @@ class ListDynamicVector {
                 bool has_previous() const;
                 T next();
                 T previous();
-                int next_index() const;
-                int previous_index() const;
 
                 void add(T element);
                 void set(T element);
@@ -143,16 +144,6 @@ T ListDynamicVector<T>::ListIterator::previous() {
 }
 
 template<typename T>
-int ListDynamicVector<T>::ListIterator::next_index() const {
-    return current_index;
-}
-
-template<typename T>
-int ListDynamicVector<T>::ListIterator::previous_index() const {
-    return current_index - 1;
-}
-
-template<typename T>
 void ListDynamicVector<T>::ListIterator::add(T element) {
     vector->add(element, current_index);
     current_index++;
@@ -181,3 +172,5 @@ void ListDynamicVector<T>::ListIterator::remove() {
 
     last_index = -1;
 }
+
+#endif /* LISTDYNAMICVECTOR_H_ */

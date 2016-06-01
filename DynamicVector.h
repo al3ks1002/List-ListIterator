@@ -1,3 +1,6 @@
+#ifndef DYNAMICVECTOR_H_
+#define DYNAMICVECTOR_H_
+
 #include "CustomException.h"
 
 template<typename T>
@@ -134,3 +137,5 @@ void DynamicVector<T>::resize() {
     delete[] elements;
     elements = aux;
 }
+
+#endif /* DYNAMICVECTOR_H_ */

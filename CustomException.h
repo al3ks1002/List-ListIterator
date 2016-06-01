@@ -1,3 +1,6 @@
+#ifndef CUSTOMEXCEPTION_H_
+#define CUSTOMEXCEPTION_H_
+
 #include <exception>
 #include <string>
 
@@ -11,3 +14,5 @@ class CustomException: public std::exception {
     private:
         std::string message;
 };
+
+#endif /* CUSTOMEXCEPTION_H_ */
