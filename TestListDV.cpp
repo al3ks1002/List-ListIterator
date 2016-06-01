@@ -73,7 +73,7 @@ void test_list() {
     ListDynamicVector<int> l1;
     assert(l1.size() == 0);
 
-    ListIteratorDV<int> it = l1.begin();
+    ListDynamicVector<int>::ListIterator it = l1.begin();
     it.add(1);
     it.add(2);
     it.add(3);
@@ -124,7 +124,9 @@ void test_list() {
     assert(it.previous() == 3);
     assert(it.previous() == 1);
 
-    it = l1.end();
+    it = l1.begin();
+    it.next();
+    it.next();
     assert(it.has_previous() == 1);
     assert(it.has_next() == 0);
     assert(it.previous() == 3);
@@ -159,8 +161,8 @@ void test_list() {
     it.add(2);
     it.add(3);
 
-    ListIteratorDV<int> it2(it);
-    ListIteratorDV<int> it3;
+    ListDynamicVector<int>::ListIterator it2(it);
+    ListDynamicVector<int>::ListIterator it3;
     it3 = it;
     assert(it3.has_next() == 0);
     assert(it2.has_next() == 0);
