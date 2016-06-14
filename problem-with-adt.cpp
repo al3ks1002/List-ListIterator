@@ -8,6 +8,9 @@ using namespace std;
 
 const int INFINITY = 1 << 30;
 
+/*
+ * Adds a balloon in the list, mantaining the list sorted.
+ */
 void add_balloon(ListDoublyLinkedList<Balloon>& balloons, Balloon b) {
     auto it = balloons.begin();
     while (it.has_next()) {
@@ -21,10 +24,15 @@ void add_balloon(ListDoublyLinkedList<Balloon>& balloons, Balloon b) {
 }
 
 int main() {
-    freopen("big.in", "r", stdin);
+    clock_t start = clock();
+
+    freopen("test4.in", "r", stdin);
 
     ListDoublyLinkedList<Balloon> balloons;
     ListDoublyLinkedList<Balloon> answer;
+
+    /* ListDynamicVector<Balloon> balloons; */
+    /* ListDynamicVector<Balloon> answer; */
 
     int n;
     cin >> n;
@@ -57,6 +65,9 @@ int main() {
         cout << "Y coordinate: " << b.get_y() << '\n';
         cout << "Radius: " << b.get_radius() << '\n';
     }
+
+    clock_t finish = clock();
+    cerr << fixed << 1.0 * (finish - start) / CLOCKS_PER_SEC << '\n';
 
     return 0;
 }
